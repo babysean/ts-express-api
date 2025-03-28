@@ -40,6 +40,20 @@ app.post("/api/todos", (req: Request, res: Response) => {
   res.status(201).json(newTodo);
 });
 
+// PUT: 할 일 업데이트 (완료 상태 토글)
+app.put("/api/todos/:id", (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  todos = todos.map(todo => 
+    todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  );
+  const updatedTodo = todos.find(todo => todo.id === id);
+  if (updatedTodo) {
+    res.json(updatedTodo);
+  } else {
+    res.status(404).json({ message: "Todo not found" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
