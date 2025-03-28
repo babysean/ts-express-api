@@ -40,7 +40,7 @@ app.post("/api/todos", (req: Request, res: Response) => {
   res.status(201).json(newTodo);
 });
 
-// PUT: 할 일 업데이트 (완료 상태 토글)
+// PUT: 할 일 완료 처리
 app.put("/api/todos/:id", (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
   todos = todos.map(todo => 
@@ -49,6 +49,18 @@ app.put("/api/todos/:id", (req: Request, res: Response) => {
   const updatedTodo = todos.find(todo => todo.id === id);
   if (updatedTodo) {
     res.json(updatedTodo);
+  } else {
+    res.status(404).json({ message: "Todo not found" });
+  }
+});
+
+// DELETE: 할 일 삭제
+app.delete("/api/todos/:id", (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const beforeLength = todos.length;
+  todos = todos.filter(todo => todo.id !== id);
+  if (todos.length < beforeLength) {
+    res.json({ message: "Todo deleted" });
   } else {
     res.status(404).json({ message: "Todo not found" });
   }
